@@ -1,2 +1,6 @@
 1. picture of available themes (not only universities):
 \usetheme: http://deic.uab.es/~iblanes/beamer_gallery/
+2. latex formula guide:
+https://en.wikibooks.org/wiki/LaTeX/Mathematics
+3. inserting images tricks:
+https://en.wikibooks.org/wiki/LaTeX/Importing_Graphics
