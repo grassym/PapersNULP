@@ -1,0 +1,2 @@
+1. picture of available themes (not only universities):
+\usetheme: http://deic.uab.es/~iblanes/beamer_gallery/
