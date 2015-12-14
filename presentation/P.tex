@@ -7,7 +7,7 @@
 \logo{\includegraphics[height=1.5cm]{images/Lviv_Polytechnic} }
 
 \title{Усунення шуму на зображеннях}
-\author{Ольга Павлюк\newline {керівник: Роман Кутельмах}} 
+\author{Ольга Павлюк\newline {керівник: к.т.н. ст. викл. Роман Кутельмах}} 
 \subtitle{{ дослідження,  розроблення алгоритмів та програмного забезпечення}}
 \institute{Національний університет "Львівська політехніка", кафедра ПЗ}
 
@@ -24,19 +24,22 @@
 	\tableofcontents
 \end{frame}
 
-\section{Проблема шуму в зображеннях}
-\begin{frame}\frametitle{Проблема шуму на зображеннях}
+\section{Задача усунення шуму на зображеннях}
+\begin{frame}\frametitle{Задача усунення шуму на зображеннях}
 	\begin{block}{Шум}
 	випадкові, відсутні на реальному зображенні відхилення інтенсивності
 	\end{block}
-	\linebreak 
-	%\pause
-	\begin{itemize}
+	\begin{center}
+		\includegraphics[scale=0.2]{images/noisy_lena}
+	\end{center}
+	
+\end{frame}	
+\begin{frame} \frametitle{Задача усунення шуму на зображеннях}
+\begin{itemize}
 		\item поширена проблема для цифрових зображень у багатьох галузях
 		\item виникає при недостатьому освітленні та високій ISO камери
 	\end{itemize}
-
-	%\pause
+	
 	\begin{block}{Формальний опис}
 		v(i) = u(i) + n(i), де i - піксель зображення \linebreak
 		v(i) - спостережене значення, u(i) - справжнє значення \linebreak
@@ -57,10 +60,6 @@
 
 \begin{frame}\frametitle{Існуючі методи усунення шуму}	
 	\begin{multicols}{2}
-		[
-		\begin{center} different image domains \end{center}
-		]
-		
 		алгоритми з патчами\linebreak O(n^{2}) \linebreak
 		\includegraphics[scale=0.35]{images/patch}
 		
@@ -74,10 +73,6 @@
 
 \begin{frame}\frametitle{Існуючі методи усунення шуму}	
 	\begin{multicols}{2}
-		[
-		\begin{center} different image domains \end{center}
-		]
-		
 		алгоритми з патчами 
 		\includegraphics[scale=0.25]{images/cluster} \linebreak
 		\includegraphics[scale=0.2]{images/patch2} \linebreak
@@ -123,7 +118,7 @@
 \section{Розроблений алгоритм}
 \begin{frame}\frametitle{Ridgelet Transform }
 	Це вейвлет-перетворення, застосоване до ліній у просторі Радона
-	\includegraphics[scale=0.35]{images/ridgelet}	 
+	\includegraphics[scale=0.3]{images/ridgelet}	 
 \end{frame}
 \begin{frame}\frametitle{Перетворення Фур'є (Fourier Transform)  }
 	базовий метод для всіх алгоритмів, що працюють з частотами \linebreak \linebreak  
@@ -132,7 +127,7 @@
 \end{frame}
 
 \begin{frame}\frametitle{Перетворення Фур'є (Fourier Transform)  }
-		операція згортки (convolution) сигналу з фільтром довільної довжини виконується за лінійний час
+		операція згортки сигналу з фільтром довільної довжини виконується за лінійний час
 		\includegraphics[scale=0.35]{images/fft_2d} 
 \end{frame}
 
