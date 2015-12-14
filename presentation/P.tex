@@ -7,7 +7,7 @@
 \logo{\includegraphics[height=1.5cm]{images/Lviv_Polytechnic} }
 
 \title{Усунення шуму на зображеннях}
-\author{Ольга Павлюк}
+\author{Ольга Павлюк\newline {керівник: Роман Кутельмах}} 
 \subtitle{{ дослідження,  розроблення алгоритмів та програмного забезпечення}}
 \institute{Національний університет "Львівська політехніка", кафедра ПЗ}
 
@@ -25,16 +25,18 @@
 \end{frame}
 
 \section{Проблема шуму в зображеннях}
-\subsection{Визначення}
 \begin{frame}\frametitle{Проблема шуму на зображеннях}
 	\begin{block}{Шум}
 	випадкові, відсутні на реальному зображенні відхилення інтенсивності
 	\end{block}
 	\linebreak 
-	\pause
-	Поширена проблема для цифрових зображень у багатьох галузях.\linebreak
-	Виникає при недостатьому освітленні та високій ISO камери. 
-	\pause
+	%\pause
+	\begin{itemize}
+		\item поширена проблема для цифрових зображень у багатьох галузях
+		\item виникає при недостатьому освітленні та високій ISO камери
+	\end{itemize}
+
+	%\pause
 	\begin{block}{Формальний опис}
 		v(i) = u(i) + n(i), де i - піксель зображення \linebreak
 		v(i) - спостережене значення, u(i) - справжнє значення \linebreak
@@ -42,7 +44,7 @@
 	\end{block}
 \end{frame}
 
-\subsection{Характеристики}
+
 \begin{frame}\frametitle{Параметри оцінки алгоритмів}
 	\begin{enumerate}
 		\item автоматичні: Peak Signal-to-Noise Ratio \linebreak
@@ -52,7 +54,7 @@
 	\end{enumerate}
 \end{frame}
 
-\subsection{Існуючі алгоритми усунення шуму}
+
 \begin{frame}\frametitle{Існуючі методи усунення шуму}	
 	\begin{multicols}{2}
 		[
@@ -108,42 +110,30 @@
 \section{Завдання магістерського дослідження}
 \begin{frame}\frametitle{Завдання магістерського дослідження}
 	\begin{block}{Об'єкт}
-		шум на зображеннях
+		процес усунення шуму на зображеннях
 	\end{block}
 	\begin{block}{Предмет}
-		розробка алгоритму для усунення шуму, що працює в частотній області
+		методи, алгоритми та програмне забезпечення для усунення шуму на зображеннях
 	\end{block}
 	\begin{block}{Мета}
-		розробити алгоритм з лінійно-логарифмічною складністю, який покращує існуючі методи усунення шуму (час роботи + візуальна оцінка)
+		розроблення алгоритмів та програмного забезпечення для усунення шуму на зображеннях
 	\end{block}
 \end{frame}
 
-
-\section{Алгоритм Curvelet Transform}
-\begin{frame}\frametitle{Алгоритм Curvelet Transform }
-	\begin{enumerate}
-		\item один з видів вейвлет-перетворення
-		\item усуває шум вздовж кривих
-		\item працює у частотній області
-		\item складається з кількох незалежних перетворень
-	\end{enumerate} 
+\section{Розроблений алгоритм}
+\begin{frame}\frametitle{Ridgelet Transform }
+	Це вейвлет-перетворення, застосоване до ліній у просторі Радона
+	\includegraphics[scale=0.35]{images/ridgelet}	 
+\end{frame}
+\begin{frame}\frametitle{Перетворення Фур'є (Fourier Transform)  }
+	базовий метод для всіх алгоритмів, що працюють з частотами \linebreak \linebreak  
+	сигнал можна представити у вигляді суми синусоїд з різними амплітудами та зсувом
+	\includegraphics[scale=0.5]{images/fourier_1d} 
 \end{frame}
 
 \begin{frame}\frametitle{Перетворення Фур'є (Fourier Transform)  }
-базовий метод для всіх алгоритмів, що працюють з частотами \linebreak \linebreak  
-сигнал можна представити у вигляді суми синусоїд з різними амплітудами та зсувом
-\includegraphics[scale=0.5]{images/fourier_1d} 
-\end{frame}
-
-\begin{frame}\frametitle{Перетворення Фур'є (Fourier Transform)  }
-	\begin{multicols}{2}
-		[ операція згортки (convolution) сигналу з фільтром довільної довжини виконується за лінійний час
-		]
-		\includegraphics[scale=0.35]{images/image_fourier} 
-		\columnbreak
-		\linebreak
-		вейвлет- фільтри теж можуть бути представлені у частотній області за допомогою комплексних вейвлетів
-	\end{multicols}	
+		операція згортки (convolution) сигналу з фільтром довільної довжини виконується за лінійний час
+		\includegraphics[scale=0.35]{images/fft_2d} 
 \end{frame}
 
 \begin{frame}\frametitle{Перетворення Радона (Radon Transform) }
@@ -157,21 +147,25 @@
 	\includegraphics[scale=0.4]{images/projection_slice} 
 \end{frame}
 
-\begin{frame}\frametitle{Ridglet Transform }
-	Це вейвлет-перетворення, застосоване до ліній у просторі Радона
-	\includegraphics[scale=0.35]{images/ridgelet}	 
+\begin{frame}\frametitle{Ректополярна решітка}
+	{2*n} прямих
+	\includegraphics[scale=0.35]{images/rp_grid}	 
+\end{frame}
+\begin{frame}\frametitle{Зворотнє перетворення Радона}
+	\includegraphics[scale=0.35]{images/bilinear} \linebreak
+{P = ax + by + cxy + d} \newline
+{ax_{1} + by_{1} + cx_{1}y_{1}+d = Q_{11}} \newline
+{ax_{1} + by_{2} + cx_{1}y_{2}+d = Q_{21}} \newline
+{ax_{2} + by_{1} + cx_{1}y_{1}+d = Q_{12}} \newline
+{ax_{2} + by_{2} + cx_{2}y_{2}+d = Q_{22}} \newline
 \end{frame}
 
-\begin{frame}\frametitle{Ridglet Transform }
-	Застосовано вейвлет Добеші D4 = [0.482962, 0.836516, 0.224143, -0.129409], висока та низька частота обчислюються за формулами: \linebreak
-	high[v] = y[2*v]*D4[0] + y[2*v+1]*D4[1] + y[2*v+2]*D4[2] + y[2*v+3]*D4[3] \linebreak
-	low[v] = y[2*v]*D4[3] - y[2*v+1]*D4[2] + y[2*v+2]*D4[1] – y[2*v+3]*D4[0]. \linebreak
-	Вейвлет-коефіцієнти з абсолютним значенням меншим за заданий поріг σ встановлюються в 0, потім застосовується обернене перетворення.
-\end{frame}
 
-\begin{frame}\frametitle{Frequency Grid Tiling }
-	Ridgelet-перетворення до областей у полярній системі координат \linebreak
-	\includegraphics[scale=0.4]{images/grid_tiling} 
+\begin{frame}\frametitle{Усунення шуму в просторі Радона}
+	Застосовано вейвлет Добеші D4 = [0.482962, 0.836516, 0.224143, -0.129409], висока та низька частота обчислюються за формулами: \linebreak 
+	v_{high}=y[2v]*D_{4}[0]+y[2v+1]*D_{4}[1]+y[2v+2]*D_{4}[2]+y[2v+3]*D_{4}[3] \linebreak \linebreak
+	v_{low}=y[2v]*D_{4}[3]-y[2v+1]*D{4}[2]+y[2v+2]*D{4}[1]-y[2v+3]*D{4}[0] \linebreak
+%	Вейвлет-коефіцієнти з абсолютним значенням меншим за заданий поріг σ встановлюються в 0, потім застосовується обернене перетворення.
 \end{frame}
 
 \section{Використані технології}
@@ -185,41 +179,78 @@
 	\begin{enumerate}
 		\item GLSL: труднощі у відлагодженні програм
 	\end{enumerate}
-
+	
 	Приклад коду шейдера:
 	\includegraphics[height=2.5cm]{images/shader_snapshot}
 \end{frame}
 
-\begin{frame}\frametitle{Діаграма класів Curvelet Transform}
-	\includegraphics[scale=0.2]{images/class_diagram}
+\section{Дослідження розробленого алгоритму}
+\begin{frame}\frametitle{ Візуалізація перетворення Радона }
+	\begin{multicols}{2}
+		\includegraphics[scale=0.19]{images/radon_fa} 
+		\columnbreak	
+		\includegraphics[scale=0.185]{images/radon_fa_2}
+	\end{multicols}
+	
 \end{frame}
 
-\section{Поточні результати}
-\begin{frame}\frametitle{Поточні результати}
-	Зашумлене зображення(зліва) та результат роботи алгоритму(справа)
-	\begin{center}
-			\includegraphics[width=8cm]{images/res_algo_1}
-	\end{center}
-\end{frame}
-\begin{frame}\frametitle{Поточні результати}
-	Зашумлене зображення(зліва) та результат роботи алгоритму(справа)
-	\begin{center}
-		\includegraphics[width=8cm]{images/res_algo_2}
-	\end{center}
+\begin{frame}\frametitle{ Порівняння з NLM(час роботи)}
+	\begin{itemize}
+		\item NLM надто повільний
+		\item розроблений алгоритм - норм швидкість
+	\end{itemize}
+	\includegraphics[scale=0.4]{images/table_imsize}
 \end{frame}
 
+\begin{frame}\frametitle{ Швидкість роботи алгоритму }
+	\includegraphics[scale=0.25]{images/super_graph}
+\end{frame}
+
+\section{Результати}
+\begin{frame}\frametitle{ Результати }
+стаття \newline {\bf «Investigation of Existing Image Denoising Algorithms»}\newline \newline   (автори — О. Павлюк та Р. Кутельмах) \newline \newline  
+у Віснику НУЛП 	
+\end{frame}
+\begin{frame}\frametitle{ Результати}
+	приклад зашумленого зображення
+	\includegraphics[scale=0.5]{images/noisy_1}
+\end{frame}
+\begin{frame}\frametitle{ Результати}
+	результат роботи розробленого алгоритму
+	\includegraphics[scale=0.5]{images/my_1}
+\end{frame}
+\begin{frame}\frametitle{ Результати}
+	приклад зашумленого зображення
+	\includegraphics[scale=0.3]{images/lviv_orig}
+\end{frame}
+\begin{frame}\frametitle{ Результати}
+	приклад роботи алгоритму Curvelab
+	\includegraphics[scale=0.3]{images/lviv_curvelet}
+\end{frame}
+\begin{frame}\frametitle{ Результати}
+	приклад роботи NLM
+	\includegraphics[scale=0.3]{images/lviv_nlm}
+\end{frame}
+\begin{frame}\frametitle{ Результати}
+	приклад роботи розробленого алгоритму
+	\includegraphics[scale=0.3]{images/lviv_mine}
+\end{frame}
+\begin{frame}\frametitle{ Результати}
+	приклад роботи програми
+	\includegraphics[scale=0.07]{images/android_rocks}
+\end{frame}
 \section{Висновки}
 \begin{frame}\frametitle{Висновки }
-	\begin{enumerate}
-		\item розроблено базову версію алгоритму Curvelet Transform
-		\item буде покращено схему інтерполяції та обрано інший тип вейвлета
-		\item це допоможе досягнути вищої візуальної якості 
-	\end{enumerate}
+ \begin{itemize}		
+ 	\item Запропоновано новий алгоритм усунення шуму на зображеннях, який базується на існуючому алгоритмі Ridgelet-перетворення
+ 	\item Розроблено спеціалізовану версію алгоритму для виконання на графічному процесорі
+ 	\item Обчислювальна складність алгоритму становить O(n*log(n)), що дає змогу застосовувати його для опрацювання зображень великого розміру (20 МП і більше)
+ \end{itemize}
 \end{frame}
 
 \begin{frame}\frametitle{}
 	\begin{center}
-	Дякую за увагу!
+	{\Large Дякую за увагу!}
 	\end{center}
 \end{frame}
 
