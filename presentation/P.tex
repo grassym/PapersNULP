@@ -6,9 +6,9 @@
 \usetheme{Berkeley}
 \logo{\includegraphics[height=1.5cm]{images/Lviv_Polytechnic} }
 
-\title{Усунення шуму на зображеннях}
-\author{Ольга Павлюк\newline {керівник: к.т.н. ст. викл. Роман Кутельмах}} 
-\subtitle{{ дослідження,  розроблення алгоритмів та програмного забезпечення}}
+\title{Алгоритми та програмне забезпечення для усунення шуму на зображеннях}
+\author{Ольга Павлюк \newline \newline {керівник: к.т.н., ст. викл. Роман Кутельмах}} 
+%\subtitle{{ дослідження,  розроблення алгоритмів та програмного забезпечення}}
 \institute{Національний університет "Львівська політехніка", кафедра ПЗ}
 
 \date{\today}
@@ -48,7 +48,7 @@
 \end{frame}
 
 
-\begin{frame}\frametitle{Параметри оцінки алгоритмів}
+\begin{frame}\frametitle{Параметри оцінки алгоритмів усунення шуму}
 	\begin{enumerate}
 		\item автоматичні: Peak Signal-to-Noise Ratio \linebreak
 		\includegraphics[scale=0.4]{images/mse} \linebreak
@@ -90,7 +90,7 @@
 		\item виконується рекурсивна декомпозиція сигналу до заданого рівня\linebreak
 		\includegraphics[scale=0.3]{images/filter_bank} \linebreak
 		\item коефіцієнти аналізуються "знизу вверх" 
-		\item застосовується порогове відсікання (thresholding): \linebreak
+		\item застосовується порогове відсікання: \linebreak
 		\[
 		w(x)= 
 		\begin{cases}
@@ -116,37 +116,56 @@
 \end{frame}
 
 \section{Розроблений алгоритм}
-\begin{frame}\frametitle{Ridgelet Transform }
-	Це вейвлет-перетворення, застосоване до ліній у просторі Радона
-	\includegraphics[scale=0.3]{images/ridgelet}	 
+\begin{frame}\frametitle{Розроблений алгоритм}
+	\begin{itemize}
+		\item є модифікацією Ridgelet-перетворення
+		\item розроблений для роботи на GPU (GLSL)
+	\end{itemize}
 \end{frame}
-\begin{frame}\frametitle{Перетворення Фур'є (Fourier Transform)  }
-	базовий метод для всіх алгоритмів, що працюють з частотами \linebreak \linebreak  
-	сигнал можна представити у вигляді суми синусоїд з різними амплітудами та зсувом
+\begin{frame}\frametitle{Ridgelet-перетворення }
+	\begin{center}
+	\includegraphics[width=0.65\textwidth]{images/ridgelet}
+	\end{center}
+	\linebreak Це вейвлет-перетворення, застосоване до ліній у просторі Радона
+		 
+\end{frame}
+\begin{frame}\frametitle{Перетворення Фур'є}
+	\begin{itemize}
+		\item базовий метод для всіх алгоритмів, що працюють з частотами   
+		\item сигнал можна представити у вигляді суми синусоїд з різними амплітудами та зсувом
+		\item операція згортки сигналу з фільтром довільної довжини виконується за лінійний час
+	\end{itemize}
 	\includegraphics[scale=0.5]{images/fourier_1d} 
 \end{frame}
-
-\begin{frame}\frametitle{Перетворення Фур'є (Fourier Transform)  }
-		операція згортки сигналу з фільтром довільної довжини виконується за лінійний час
-		\includegraphics[scale=0.35]{images/fft_2d} 
-\end{frame}
-
 \begin{frame}\frametitle{Перетворення Радона (Radon Transform) }
 	це інтегральне перетворення, яке для кожної прямої на зображенні ставить їй у відповідність суму пікселів зображення на цій прямій\linebreak
 	\includegraphics[scale=0.4]{images/radon} \texttt{\char32}
 	\includegraphics[scale=0.4]{images/sinogram} 
 \end{frame}
-
+\begin{frame}\frametitle{ Візуалізація перетворення Радона }
+	\begin{multicols}{2}
+		\includegraphics[scale=0.19]{images/radon_fa} 
+		\columnbreak	
+		\includegraphics[scale=0.185]{images/radon_fa_2}
+	\end{multicols}
+	
+\end{frame}
 \begin{frame}\frametitle{Projection-Slice Theorem }
 	Зв'язок між перетворенням Фур'є та перетворенням Радона \linebreak
 	\includegraphics[scale=0.4]{images/projection_slice} 
 \end{frame}
 
 \begin{frame}\frametitle{Ректополярна решітка}
-	{2*n} прямих
-	\includegraphics[scale=0.35]{images/rp_grid}	 
+	\begin{center}
+	\begin{wrapfigure}
+		\includegraphics[width=0.5\textwidth]{images/rp_grid}
+	\end{wrapfigure}
+	\end{center}
+	\linebreak Розглядаються {2n} прямих, які проходять через центр зображення FFT
+	\linebreak Використовується інтерполяція методом найближчого сусіда
 \end{frame}
 \begin{frame}\frametitle{Зворотнє перетворення Радона}
+	Використовується білінійна інтерполяція  \linebreak
 	\includegraphics[scale=0.35]{images/bilinear} \linebreak
 {P = ax + by + cxy + d} \newline
 {ax_{1} + by_{1} + cx_{1}y_{1}+d = Q_{11}} \newline
@@ -154,7 +173,6 @@
 {ax_{2} + by_{1} + cx_{1}y_{1}+d = Q_{12}} \newline
 {ax_{2} + by_{2} + cx_{2}y_{2}+d = Q_{22}} \newline
 \end{frame}
-
 
 \begin{frame}\frametitle{Усунення шуму в просторі Радона}
 	Застосовано вейвлет Добеші D4 = [0.482962, 0.836516, 0.224143, -0.129409], висока та низька частота обчислюються за формулами: \linebreak 
@@ -172,7 +190,7 @@
 	\end{enumerate}
 	Недоліки:
 	\begin{enumerate}
-		\item GLSL: труднощі у відлагодженні програм
+		\item GLSL: труднощі при відлагодженні програм
 	\end{enumerate}
 	
 	Приклад коду шейдера:
@@ -180,19 +198,12 @@
 \end{frame}
 
 \section{Дослідження розробленого алгоритму}
-\begin{frame}\frametitle{ Візуалізація перетворення Радона }
-	\begin{multicols}{2}
-		\includegraphics[scale=0.19]{images/radon_fa} 
-		\columnbreak	
-		\includegraphics[scale=0.185]{images/radon_fa_2}
-	\end{multicols}
-	
-\end{frame}
+
 
 \begin{frame}\frametitle{ Порівняння з NLM(час роботи)}
 	\begin{itemize}
-		\item NLM надто повільний
-		\item розроблений алгоритм - норм швидкість
+		\item NLM працює довго на зображеннях розміру > 1МП
+		\item розроблений алгоритм працює в режимі реального часу
 	\end{itemize}
 	\includegraphics[scale=0.4]{images/table_imsize}
 \end{frame}
@@ -216,6 +227,14 @@
 \end{frame}
 \begin{frame}\frametitle{ Результати}
 	приклад зашумленого зображення
+	\includegraphics[scale=0.1]{images/al_1}
+\end{frame}
+\begin{frame}\frametitle{ Результати}
+	результат роботи розробленого алгоритму
+	\includegraphics[scale=0.28]{images/mine_1}
+\end{frame}
+\begin{frame}\frametitle{ Результати}
+	приклад зашумленого зображення
 	\includegraphics[scale=0.3]{images/lviv_orig}
 \end{frame}
 \begin{frame}\frametitle{ Результати}
@@ -231,7 +250,15 @@
 	\includegraphics[scale=0.3]{images/lviv_mine}
 \end{frame}
 \begin{frame}\frametitle{ Результати}
-	приклад роботи програми
+	\includegraphics[scale=0.07]{images/android_rocks}
+\end{frame}
+\begin{frame}\frametitle{ Приклад роботи програми}
+	\includegraphics[scale=0.18]{images/cocoa}
+	
+	
+\end{frame}
+\begin{frame}\frametitle{ Приклад роботи програми}
+	
 	\includegraphics[scale=0.07]{images/android_rocks}
 \end{frame}
 \section{Висновки}
